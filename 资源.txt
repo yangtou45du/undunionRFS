@@ -1,0 +1,410 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          业务关键字.txt
+Library           os
+Library           random
+
+*** Keywords ***
+进入资源页面
+    登录
+    sleep    1
+    进入平台
+    Wait Until Page Contains Element    Xpath=//*[@id='J_nav']/div/ul/li[3]/a/span    10
+    click element    Xpath=//*[@id='J_nav']/div/ul/li[3]/a/span    #点击资源
+    Wait Until Page Contains Element    link=添加司机    10    进入资源失败
+
+填写司机基础信息
+    Wait Until Page Contains Element    link=添加司机
+    click element    link=添加司机
+    Wait Until Page Contains Element    id=firstName    10    添加司机失败。。。
+    select checkbox    Xpath=//*[@id='container']/div[1]/div[1]/label[2]/input    #全选司机
+    select checkbox    Xpath=//*[@id='container']/div[1]/div[1]/label[3]/input
+    select checkbox    Xpath=//*[@id='container']/div[1]/div[1]/label[4]/input
+    select checkbox    Xpath=//*[@id='container']/div[1]/div[1]/label[5]/input
+    #sleep    1
+    click element    Xpath=//*[@id='group_chosen']/a/span    #选择分组
+    click element    Xpath=//*[@id='group_chosen']/div/ul/li[2]
+    click element    Xpath=//*[@id='container']/div[1]/div[3]/div/a    #上传头像
+    click element    id=uploadBtn    #点击上传
+    上传照片
+    Wait Until Page Contains Element    Xpath=//div/a[2][contains(text(),"确定")]    20    上传头像失败
+    sleep    2
+    click element    Xpath=//div/a[2][contains(text(),"确定")]    #点击确定
+    sleep    1
+    input text    id=firstName    李
+    ${lastname}    evaluate    random.randint(0,100)    random
+    input text    id=lastName    丹${lastname}    #输入姓名
+    ${phonenum}    evaluate    random.randint(10000000,99999999)    random
+    input text    id=phone    137${phonenum}    #输入手机号
+    ${phone}    set variable    137${phonenum}
+    sleep    2
+    click element    Xpath=//*[@id="container"]/div[1]/div[9]/div[1]/a/span    #选择服务城市
+    click element    Xpath=//*[@id="container"]/div[1]/div[9]/div[1]/div/ul/li[2]    #省
+    sleep    1
+    click element    Xpath=//*[@id="container"]/div[1]/div[9]/div[2]/a/span    #市
+    click element    Xpath=//*[@id="container"]/div[1]/div[9]/div[2]/div/ul/li[2]
+
+填写司机身份证信息
+    input text    id=idCardCode    511302199110111212    #身份证号
+    #Wait Until Page Contains Element    id=idCard1    10    上传身份证失败
+    #sleep    6
+    #Wait Until Element Is Visible    id=idCard1    10
+    #click element    id=idCard1    #上传身份证
+    #sleep    2
+    #上传照片
+
+填写司机驾驶证信息
+    Wait Until Page Contains Element    Xpath=//*[@id="drivingLisenceType_chosen"]/a/div/b    10
+    sleep    5
+    click element    id=drivingLisenceType_chosen    #驾驶证类型
+    click element    Xpath=//*[@id="drivingLisenceType_chosen"]/div/ul/li[1]    #A1
+    execute Javascript    window.document.getElementById("getDrivingLisenceDate").value='2016-08-08'    #驾驶证领证日期
+    execute Javascript    window.document.getElementById("drivingLisenceValidDate").value='2019-08-08'    #驾驶证有效日期
+    #sleep    4
+    #click link    id=jszCard1    #上传驾驶证照片
+    #Wait Until Element Is Visible    id=jszCard1    5    上传驾驶证失败
+    #click element    id=jszCard1
+    #上传照片
+
+填写客运司机从业信息
+    input text    id=generalOccupationalRequirementCode    AAAAAAAAAA    #客运从业资格证
+    #sleep    2
+    execute Javascript    window.document.getElementById("generalOccupationalRequirementValidDate").value='2019-08-08'    #客运从业资格证有效期
+    #sleep    4
+    #click element    id=generalCard    #客运证件
+    #sleep    3
+    #上传照片
+
+填写网约司机从业信息
+    input text    id=chOccupationalRequirementCode    BBBBBBB    #网约从业资格证
+    #sleep    2
+    execute Javascript    window.document.getElementById("chOccupationalRequirementValidDate").value='2019-08-08'    #网约从业资格证有效期
+    #sleep    4
+    #click element    id=chCard    #网约证件图片
+    #sleep    3
+    #上传照片
+
+填写出租司机信息
+    input text    id=taxiOccupationalRequirementCode    CCCCCCCC    #出租从业资格证
+    #sleep    2
+    execute Javascript    window.document.getElementById("taxiOccupationalRequirementValidDate").value='2019-08-08'    #出租从业资格证有效期
+    #sleep    4
+    #click element    id=taxiCard    #出租证件图片
+    #sleep    3
+    #上传照片
+    input text    id=serviceSuperviseCardCode    CCCCCCCC    #出租服务监督卡
+    #sleep    2
+    execute Javascript    window.document.getElementById("serviceSuperviseValidDate").value='2019-08-08'    #出租服务监督卡有效期
+    #sleep    4
+    #click element    Xpath=//*[@id="superviseCard"]/i    #出租服务监督卡图片
+    #sleep    3
+    #上传照片
+
+创建司机下一步和完成
+    click element    Xpath=//*[@id="app"]/div[2]/div[1]/div/div/div[2]/div/div[2]/input    #点击下一步
+    #Wait Until Page Contains Element    Xpath=//*[@id="app"]/div[2]/div[1]/div/div/div[2]/div/div[2]/input    10
+    sleep    5
+    click button    Xpath=//*[@id="app"]/div[2]/div[1]/div/div/div[2]/div/div[2]/input    #点击完成
+
+进入添加车辆页面
+    click link    link=车辆信息
+    Wait Until Page Contains Element    link=添加车辆    10    添加车辆失败
+    click link    link=添加车辆
+
+选择车辆类型
+    [Arguments]    ${num}
+    Select Radio Button    roleChose    ${num}
+
+选择分组和隶属关系
+    click element    Xpath=//*[@id="carGroup_chosen"]/a/div/b    #点击所属分组
+    click element    Xpath=//*[@id="carGroup_chosen"]/div/ul/li[2]
+    click element    Xpath=//*[@id="belongType_chosen"]/a/div/b    #选择隶属关系
+    click element    Xpath=//*[@id="belongType_chosen"]/div/ul/li[2]
+
+客运车基本信息
+    click element    Xpath=//*[@id="shuttleType_chosen"]/a/span    #选择班车类型
+    click element    Xpath=//*[@id="shuttleType_chosen"]/div/ul/li[2]    #县内班车
+    ${carnum}    evaluate    random.randint(10000,99999)    random
+    input text    id=licensePlat    A${carnum}
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[6]/div    #品牌车型
+    #sleep    5
+    #Wait Until Page Contains Element    Xpath=//*[@id='container']/div[1]/div/div/div[6]/div/div[2]/ul/li[1][contains(text(), '依维柯')]    20    #选择车型失败
+    #click element    Xpath=//*[@id='container']/div[1]/div/div/div[6]/div/div[2]/ul/li[1][contains(text(), '依维柯')]
+    click element    Xpath=//*[@id="carColor_chosen"]/a    #车身颜色
+    click element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[2]    #黄色
+    #sleep    2
+    click element    Xpath=//*[@id="type_chosen"]/a/span    #类型等级
+    click element    Xpath=//*[@id="type_chosen"]/div/ul/li[5]
+    click element    Xpath=//*[@id="level_chosen"]/a/span    #高三级
+    click element    Xpath=//*[@id="level_chosen"]/div/ul/li[2]
+    input text    id=totalSeats    30    #核载人数
+    input text    id=seats    29    #可售座位数
+    click element    Xpath=//*[@id="gearboxBus_chosen"]/a/span    #变速箱
+    click element    Xpath=//*[@id="gearboxBus_chosen"]/div/ul/li[2]    #自动挡
+    input text    id=engineCapacityBus    100
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[12]/div[1]/a/div/b    #省
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[12]/div[1]/div/ul/li[2]
+    sleep    2
+    Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[12]/div[2]/a/div/b    10    选择市失败。。。
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[12]/div[2]/a/div/b    #市
+    Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[12]/div[2]/div/ul/li[2]    10    选择市失败1。。。
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[12]/div[2]/div/ul/li[2]
+
+车辆行驶证
+    execute Javascript    window.document.getElementById("drivingLicenseRegisterDate").value='2016-08-08'    #注册日期
+    execute Javascript    window.document.getElementById("drivingLicenseValidDate").value='2020-08'    #年审日期
+    #click element    id=drivingLicenseValidDate1
+    #上传照片
+    #click element    id=drivingLicenseValidDate2
+    #上传照片
+
+客运证件信息
+    execute Javascript    window.document.getElementById("operationRegisterDate").value='2016-08-08'    #营运证
+    execute Javascript    window.document.getElementById("operationValidDate").value='2020-08'
+    execute Javascript    window.document.getElementById("routeBoardNumber").value='2016-08-08'    #线路牌
+    execute Javascript    window.document.getElementById("routeBoardOutdate").value='2020-08-08'
+    input text    id=compulsoryInsuranceCompany    aaaaaaaaa    #交强险
+    input text    id=compulsoryInsuranceAmount    11.11
+    execute Javascript    window.document.getElementById("compulsoryInsuranceValidDate").value='2020-08-08'
+    input text    id=carrierInsuranceCompany    aaaaaaaaa    #承运人险
+    input text    id=carrierInsuranceAmount    22.22
+    execute Javascript    window.document.getElementById("carrierInsuranceValidDate").value='2020-08-08'
+    input text    id=businessInsuranceCompany    aaaaaaaaa    #三责险
+    input text    id=businessInsuranceAmount    33.33
+    execute Javascript    window.document.getElementById("businessInsuranceValidDate").value='2020-08-08'
+
+创建车辆成功保存
+    click button    Xpath=//*[@id='app']/div[2]/div[1]/div/div/div[2]/div/div[2]/input
+
+创建司机断言
+    click element    id=J_alertBox    10    司机创建失败
+    ${result}    get text    id=J_alertBox
+    should contain    ${result}    添加司机成功
+
+创建车辆断言
+    Wait Until Page Contains Element    id=J_alertBox    10
+    ${result}    get text    id=J_alertBox
+    should contain    ${result}    成功
+
+网约车基础信息
+    ${carnum}    evaluate    random.randint(10000,99999)    random
+    input text    id=licensePlat    W${carnum}    #网约车车牌号
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[6]/div/span    #选择车辆品牌
+    sleep    1
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[6]/div/div[2]/ul/li[1]
+    Wait Until Page Contains element    Xpath=//*[@id="carModels_chosen"]/a/span    10
+    sleep    1
+    click element    Xpath=//*[@id="carModels_chosen"]/a/span    #选择车辆型号
+    sleep    2
+    click element    Xpath=//*[@id="carModels_chosen"]/div/ul/li[3]
+    click element    Xpath=//*[@id="carColor_chosen"]/a/span    #车身颜色
+    Wait Until Page Contains element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]    10
+    sleep    1
+    click element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]
+    sleep    2
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[1]/a/span    #省    #服务城市
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[1]/div/ul/li[5]
+    #sleep    2
+    Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[2]/a/span    10
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[2]/a/span    #市
+    Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[2]/div/ul/li[4]    10
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[2]/div/ul/li[4]
+
+网约车更多资料
+    ${engineCode}    evaluate    random.randint(10000,99999)    random    #发动机号
+    input text    id=engineCode    ${engineCode}
+    ${identificationCode}    evaluate    random.randint(10000,99999)    random    #车辆识别码
+    input text    id=identificationCode    ${identificationCode}
+    click element    id=fuelTypes_chosen    #车辆燃料类型
+    click element    Xpath=//*[@id="fuelTypes_chosen"]/div/ul/li[3]
+    Wait Until Page Contains Element    id=gearBoxHaling_chosen    10
+    click element    id=gearBoxHaling_chosen    #变速箱
+    click element    Xpath=//*[@id="gearBoxHaling_chosen"]/div/ul/li[2]
+    Wait Until Page Contains Element    id=engineCapacityHaling    10
+    input text    id=engineCapacityHaling    100
+
+网约车资料上传
+    input text    id=compulsoryInsuranceCompany    aaaaaaaaa    #交强险
+    input text    id=compulsoryInsuranceAmount    11.11
+    execute Javascript    window.document.getElementById("compulsoryInsuranceValidDate").value='2020-08-08'
+    input text    id=carrierInsuranceCompany    aaaaaaaaa    #承运人险
+    input text    id=carrierInsuranceAmount    22.22
+    execute Javascript    window.document.getElementById("carrierInsuranceValidDate").value='2020-08-08'
+    input text    id=businessInsuranceCompany    aaaaaaaaa    #三责险
+    input text    id=businessInsuranceAmount    33.33
+    execute Javascript    window.document.getElementById("businessInsuranceValidDate").value='2020-08-08'
+
+出租车基础信息
+    ${carnum}    evaluate    random.randint(10000,99999)    random
+    input text    id=licensePlat    C${carnum}    #网约车车牌号
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[6]/div/span    #选择车辆品牌
+    sleep    1
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[6]/div/div[2]/ul/li[1]
+    Wait Until Page Contains element    Xpath=//*[@id="carModels2_chosen"]/a/span    10
+    sleep    1
+    click element    Xpath=//*[@id="carModels2_chosen"]/a/span    #选择车辆型号
+    sleep    2
+    click element    Xpath=//*[@id="carModels2_chosen"]/div/ul/li[3]
+    click element    Xpath=//*[@id="carColor_chosen"]/a/span    #车身颜色
+    Wait Until Page Contains element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]    10
+    sleep    1
+    click element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]
+    sleep    2
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[11]/div[1]/a/span    #省    #服务城市
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[11]/div[1]/div/ul/li[4]
+    #sleep    2
+    Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[11]/div[2]/a/span    10
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[11]/div[2]/a/span    #市
+    Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[11]/div[2]/div/ul/li[4]    10
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[11]/div[2]/div/ul/li[4]
+
+租赁车基础信息1
+    [Arguments]    ${i}
+    进入添加车辆页面
+    sleep    2
+    选择车辆类型    3
+    选择分组和隶属关系
+    click element    Xpath=//*[@id="smallCarTypeRent_chosen"]/a/span    #选择车辆细类
+    click element    Xpath=//*[@id="smallCarTypeRent_chosen"]/div/ul/li[${i}]
+    ${carnum}    evaluate    random.randint(10000,99999)    random    #车牌号码
+    input text    id=licensePlat    Z${carnum}
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[7]/div/span    #选择车辆品牌
+    sleep    1
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[7]/div/div[2]/ul/li[1]
+    Wait Until Page Contains element    Xpath=//*[@id="carModelsRent_chosen"]/a/span    10    #选择车辆型号
+    sleep    1
+    click element    Xpath=//*[@id="carModelsRent_chosen"]/a/span
+    sleep    2
+    click element    Xpath=//*[@id="carModelsRent_chosen"]/div/ul/li[3]
+    click element    Xpath=//*[@id="carColor_chosen"]/a/span    #车身颜色
+    Wait Until Page Contains element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]    10
+    sleep    1
+    click element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]
+    sleep    1
+    click element    gearboxRent_chosen    #变速箱
+    click element    Xpath=//*[@id="gearboxRent_chosen"]/div/ul/li[2]
+    input text    engineCapacityRent    100    #发动机排量
+    sleep    2
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[1]/a/span    #省    #服务城市
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[1]/div/ul/li[5]
+    #sleep    2
+    #Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[2]/a/span    10
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[2]/a/span    #市
+    #Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[2]/div/ul/li[4]    10
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[2]/div/ul/li[4]
+    ${engineCodeRent}    evaluate    random.randint(10000,99999)    random    #发动机号
+    input text    id=engineCodeRent    ${engineCodeRent}
+    ${identificationCodeRent}    evaluate    random.randint(10000,99999)    random    #车辆识别码
+    input text    id=identificationCodeRent    ${identificationCodeRent}
+    click element    id=fuelTypesRent_chosen    #车辆燃料类型
+    click element    Xpath=//*[@id="fuelTypesRent_chosen"]/div/ul/li[3]
+
+租赁车基础信息2
+    [Arguments]    ${i}
+    进入添加车辆页面
+    sleep    2
+    选择车辆类型    3
+    选择分组和隶属关系
+    click element    Xpath=//*[@id="smallCarTypeRent_chosen"]/a/span    #选择车辆细类
+    click element    Xpath=//*[@id="smallCarTypeRent_chosen"]/div/ul/li[${i}]
+    ${carnum}    evaluate    random.randint(10000,99999)    random    #车牌号码
+    input text    id=licensePlat    Z${carnum}
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[7]/div/span    #选择车辆品牌
+    sleep    1
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[7]/div/div[2]/ul/li[1]
+    click element    Xpath=//*[@id="carColor_chosen"]/a/span    #车身颜色
+    Wait Until Page Contains element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]    10
+    sleep    1
+    click element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]
+    sleep    1
+    click element    gearboxRent_chosen    #变速箱
+    click element    Xpath=//*[@id="gearboxRent_chosen"]/div/ul/li[2]
+    input text    engineCapacityRent    100    #发动机排量
+    sleep    2
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[1]/a/span    #省    #服务城市
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[1]/div/ul/li[5]
+    #sleep    2
+    #Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[2]/a/span    10
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[2]/a/span    #市
+    #Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[2]/div/ul/li[4]    10
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[13]/div[2]/div/ul/li[4]
+    ${engineCodeRent}    evaluate    random.randint(10000,99999)    random    #发动机号
+    input text    id=engineCodeRent    ${engineCodeRent}
+    ${identificationCodeRent}    evaluate    random.randint(10000,99999)    random    #车辆识别码
+    input text    id=identificationCodeRent    ${identificationCodeRent}
+    click element    id=fuelTypesRent_chosen    #车辆燃料类型
+    click element    Xpath=//*[@id="fuelTypesRent_chosen"]/div/ul/li[3]
+
+租赁车基础信息3
+    [Arguments]    ${i}
+    进入添加车辆页面
+    sleep    2
+    选择车辆类型    3
+    选择分组和隶属关系
+    click element    Xpath=//*[@id="smallCarTypeRent_chosen"]/a/span    #选择车辆细类
+    click element    Xpath=//*[@id="smallCarTypeRent_chosen"]/div/ul/li[${i}]
+    ${carnum}    evaluate    random.randint(10000,99999)    random    #车牌号码
+    input text    id=licensePlat    Z${carnum}
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[7]/div/span    #选择车辆品牌
+    sleep    1
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[7]/div/div[2]/ul/li[1]
+    click element    Xpath=//*[@id="carColor_chosen"]/a/span    #车身颜色
+    Wait Until Page Contains element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]    10
+    sleep    1
+    click element    Xpath=//*[@id="carColor_chosen"]/div/ul/li[4]
+    sleep    1
+    click element    gearboxRent_chosen    #变速箱
+    click element    Xpath=//*[@id="gearboxRent_chosen"]/div/ul/li[2]
+    input text    engineCapacityRent    100    #发动机排量
+    sleep    2
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[1]/a/span    #省    #服务城市
+    c#lick element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[1]/div/ul/li[5]
+    #sleep    2
+    #Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[2]/a/span    10
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[2]/a/span    #市
+    #Wait Until Page Contains Element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[2]/div/ul/li[4]    10
+    #click element    Xpath=//*[@id="container"]/div[1]/div/div/div[14]/div[2]/div/ul/li[4]
+    ${engineCodeRent}    evaluate    random.randint(10000,99999)    random    #发动机号
+    input text    id=engineCodeRent    ${engineCodeRent}
+    ${identificationCodeRent}    evaluate    random.randint(10000,99999)    random    #车辆识别码
+    input text    id=identificationCodeRent    ${identificationCodeRent}
+    click element    id=fuelTypesRent_chosen    #车辆燃料类型
+    click element    Xpath=//*[@id="fuelTypesRent_chosen"]/div/ul/li[3]
+
+进入添加用户页面
+    sleep    2
+    Wait Until Page Contains Element    Xpath=//*[@id="app"]/div[1]/div/div[2]/div/div[2]/div[1]/ul/li[3]/a    10
+    click element    Xpath=//*[@id="app"]/div[1]/div/div[2]/div/div[2]/div[1]/ul/li[3]/a    #点击用户信息
+    sleep    2
+    Wait Until Page Contains Element    Xpath=//*[@id="app"]/div[1]/div/div[2]/div/div[2]/div[1]/ul/li[3]/a    10
+    click link    link=添加用户    #点击添加用户
+
+输入用户信息
+    [Arguments]    ${member}
+    sleep    2
+    Select Radio Button    member    ${member}    #2:非会员；4：会员
+    sleep    2
+    run keyword if    ${member}==4    click element    Xpath=//select[@id='memberCard']/option[2]
+    sleep    2
+    ${phonenum}    Evaluate    random.randint(10000000,99999999)    random    #输入手机号
+    input text    id=contactTelephone    147${phonenum}
+    input text    Xpath=//html/body/div[7]/div/div/div[2]/div[4]/input    测试
+    click element    Xpath=/html/body/div[7]/div/div/div[2]/div[7]/textarea
+    input text    Xpath=/html/body/div[7]/div/div/div[2]/div[7]/textarea    添加用户备注
+    Wait Until Page Contains Element    Xpath=/html/body/div[7]/div/div/div[3]/input[2]    10
+    click element    Xpath=/html/body/div[7]/div/div/div[3]/input[2]    #确定
+
+添加用户成功断言
+    Wait Until Page Contains Element    id=J_alertBox    10
+    ${result}    get text    id=J_alertBox
+    should contain    ${result}    成功
+
+公交车基本信息
+    选择车辆类型    4
+    ${carnum}    evaluate    random.randint(10000,99999)    random
+    input text    id=licensePlat    G${carnum}    #出租车车牌号
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[6]/div/span    #品牌车型
+    click element    Xpath=//*[@id="container"]/div[1]/div/div/div[6]/div/div[2]/ul/li[3]
+    Wait Until Page Contains Element    Xpath=//*[@id="carColor_chosen"]/a/span    #车身颜色
+    click element    Xpath=//*[@id="carColor_chosen"]/a/span
+    click element    Xpath//*[@id="carColor_chosen"]/div/ul/li[5]    #绿色

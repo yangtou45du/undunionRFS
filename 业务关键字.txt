@@ -1,0 +1,79 @@
+*** Settings ***
+Library           Selenium2Library
+Library           os
+
+*** Keywords ***
+log
+    [Arguments]    ${phone}    ${password}    ${assert}    ${results}
+    input text    id=phone1    ${phone}
+    input text    id=password    ${password}
+    click element    Xpath=//*[@id="app"]/div[1]/div/div/div/div[3]/div[5]/input
+    Wait Until Page Contains Element    ${assert}    10    登录失败
+    ${text}    Get Text    ${assert}
+    should contain    ${text}    ${results}
+    sleep    1
+
+打开网页
+    Open Browser    http://stg-firm.ichengke.cn    chrome
+    maximize browser window
+    Wait Until Page Contains Element    id=phone1    10    打开网页失败
+
+关闭浏览器
+    close browser
+
+登录
+    打开网页
+    input text    id=phone1    13712345678
+    input text    id=password    123456
+    click element    Xpath=//*[@id="app"]/div[1]/div/div/div/div[3]/div[5]/input
+    Wait Until Page Contains Element    link=创建新平台    10    登录失败。。。。
+
+TearDown
+    close_process    chromedriver
+
+首页修改密码
+    [Arguments]    ${oldpwd}    ${pwd}    ${repwd}    ${result}
+    click element    Xpath=//*[@id="app"]/div[2]/div/div/div[1]/div[1]/p[2]/a    #设置
+    Wait Until Page Contains Element    Xpath=//*[@id="container"]/div/div[1]/a    5    eorror
+    click element    Xpath=//*[@id="container"]/div/div[1]/a    #修改密码
+    Wait Until Page Contains Element    id=oldPwd    5    eorror
+    input text    id=oldPwd    ${oldpwd}
+    input text    id=pwd    ${pwd}
+    input text    id=repwd    ${repwd}
+    click element    Xpath=//*[@id="container"]/div/div[4]/input
+    Wait Until Page Contains Element    Xpath=//*[@id="J_alertBox"]/p    5    修改密码出错了
+    ${text}    get text    Xpath=//*[@id="J_alertBox"]/p
+    should contain    ${result}    ${text}
+
+设置修改密码
+
+进入平台
+    click element    Xpath=//*[@id='app']/div[2]/div/div/div[1]/div[2]/ul/li[1]/h3
+
+下电召拼车订单
+    [Arguments]    ${count}
+    登录    18030839210    123456
+    sleep    1
+    click element    Xpath=//*[@id="app"]/div[2]/div/div/div[1]/div[2]/ul/li[1]    #进入平台
+    Wait Until Page Contains Element    Xpath=//*[@id="J_nav"]/div/ul/li[7]/a/span    10    进入主页失败
+    click element    Xpath=//*[@id="J_nav"]/div/ul/li[7]/a/span    #点击订单
+    Wait Until Page Contains Element    Xpath=//*[@id="app"]/div[1]/div/div[2]/div/div[2]/div[1]/ul/li[3]/a    10    进入订单失败
+    sleep    1
+    click element    Xpath=//*[@id="app"]/div[1]/div/div[2]/div/div[2]/div[1]/ul/li[3]/a    #点击调度管理
+    Wait Until Page Contains Element    Xpath=//*[@id="container"]/ul/li[2]    10    拼车页面失败
+    sleep    1
+    click element    Xpath=//*[@id="container"]/ul/li[2]    #点击拼车
+    : FOR    ${i}    IN RANGE    ${count}
+    \    sleep    1
+    \    input text    id=contactTelephone    13730687504    #旅客电话
+    \    press key    id=contactTelephone    \\13
+    \    sleep    5
+    \    click button    Xpath=//*[@id="container"]/div[1]/div[2]/div/div[2]/div[1]/input[2]    #选择历史方案
+    \    sleep    1
+    \    click element    Xpath=//*[@id="container"]/div[1]/div[1]/div[21]/a    #确认下单
+    关闭浏览器
+
+上传照片
+    #sleep    1
+    Evaluate    os.system("C:\\RobotFramework\\upphoto.exe")    os
+    sleep    1

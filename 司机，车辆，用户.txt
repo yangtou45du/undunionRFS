@@ -1,0 +1,100 @@
+*** Settings ***
+Suite Teardown
+Test Setup
+Test Teardown     关闭浏览器
+Library           Selenium2Library
+Resource          业务关键字.txt
+Library           os
+Library           random
+Resource          资源.txt
+
+*** Test Cases ***
+创建四种角色司机
+    #创建司机
+    进入资源页面
+    填写司机基础信息
+    填写司机身份证信息
+    填写司机驾驶证信息
+    填写客运司机从业信息
+    填写网约司机从业信息
+    填写出租司机信息
+    创建司机下一步和完成
+    创建司机断言
+    关闭浏览器
+
+创建客运车
+    进入资源页面
+    进入添加车辆页面
+    sleep    2
+    选择分组和隶属关系
+    客运车基本信息
+    车辆行驶证
+    客运证件信息
+    创建车辆成功保存
+    创建车辆断言
+
+创建网约车
+    进入资源页面
+    进入添加车辆页面
+    sleep    2
+    选择车辆类型    1
+    选择分组和隶属关系
+    网约车基础信息
+    网约车更多资料
+    车辆行驶证
+    网约车资料上传
+    创建车辆成功保存
+    创建车辆断言
+
+创建出租车
+    进入资源页面
+    进入添加车辆页面
+    sleep    2
+    选择车辆类型    2
+    选择分组和隶属关系
+    出租车基础信息
+    车辆行驶证
+    #execute Javascript    window.document.getElementById("drivingLicenseRegisterDate").value='2016-08-08'
+    #execute Javascript    window.document.getElementById("drivingLicenseValidDate").value='2020-08'
+    创建车辆成功保存
+    创建车辆断言
+
+创建租赁车
+    进入资源页面
+    : FOR    ${i}    IN RANGE    2    12
+    \    run keyword if    ${i}<=6    租赁车基础信息1    ${i}
+    \    ...    ELSE IF    6<${i}<=9    租赁车基础信息2    ${i}
+    \    ...    ELSE IF    ${i}==10    租赁车基础信息1    ${i}
+    \    ...    ELSE IF    ${i}==11    租赁车基础信息3    ${i}
+    \    ...    ELSE    log    wrong
+    \    车辆行驶证
+    \    创建车辆成功保存
+    \    创建车辆断言
+    \    sleep    2
+
+非会员
+    进入资源页面
+    进入添加用户页面
+    输入用户信息    2
+    添加用户成功断言
+
+会员
+    进入资源页面
+    进入添加用户页面
+    输入用户信息    4
+    添加用户成功断言
+
+创建公交司机
+    进入资源页面
+    Wait Until Page Contains Element    link=添加司机
+    click element    link=添加司机
+    Wait Until Page Contains Element    id=firstName    10    添加司机失败。。。
+
+创建公交车
+    进入资源页面
+    进入添加车辆页面
+    sleep    2
+    选择分组和隶属关系
+    公交车基本信息
+    创建车辆成功保存
+    创建车辆断言

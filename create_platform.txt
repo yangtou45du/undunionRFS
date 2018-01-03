@@ -1,0 +1,35 @@
+*** Settings ***
+Test Teardown     关闭浏览器
+Library           Selenium2Library
+Resource          业务关键字.txt
+Resource          创建新平台.txt
+
+*** Test Cases ***
+create_private_platform_suc
+    #创建个人平台
+    登录
+    选择平台类型
+    sleep    1
+    Click Element    Xpath=//*[@id="type_chosen"]/a/div/b    #选择个人平台
+    Click Element    Xpath=//*[@id='type_chosen']/div/ul/li[2]    #选择个人平台
+    sleep    1
+    创建平台的基本信息
+    创建成功
+    关闭浏览器
+
+create_company_platform1_suc
+    #创建企业平台
+    登录
+    选择平台类型
+    sleep    1
+    Click Element    Xpath=//*[@id=\"type_chosen\"]/a/div/b    #选择企业平台
+    Click Element    Xpath=//*[@id='type_chosen']/div/ul/li[1]    #选择企业平台
+    sleep    1
+    Click Element    Xpath=//*[@id='firmClass_chosen']/a/div/b    #选择隶属关系
+    Click Element    Xpath=//*[@id='firmClass_chosen']/div/ul/li[2]    #选择隶属关系
+    sleep    1
+    Click Element    Xpath=//*[@id='firmType_chosen']/a/div/b    #选择企业类型
+    Click Element    Xpath=//*[@id='firmType_chosen']/div/ul/li[3]    #选择企业类型
+    创建平台的基本信息
+    创建成功
+    关闭浏览器

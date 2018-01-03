@@ -1,0 +1,41 @@
+*** Settings ***
+Suite Setup
+Test Setup        打开网页
+Test Teardown     关闭浏览器
+Test Template     log
+Test Timeout
+Library           Selenium2Library
+Library           AutoItLibrary
+Resource          业务关键字.txt
+Library           random
+Library           ../../Tools/aa.py
+
+*** Variables ***
+${phone}          13712345678    # Test Template有效的电话号码
+${password}       123456    # 有效的密码
+
+*** Test Cases ***
+wrong_phone
+    ${empty}    ${password}    Xpath=//*[@id="app"]/div[1]/div/div/div/div[3]/div[1]/p    请输入电话号码
+    #不输入账户和正确的密码
+
+empty_passwd
+    ${phone}    ${empty}    Xpath=//*[@id="app"]/div[1]/div/div/div/div[3]/div[2]/p    请输入您的登录密码
+    #正确的账户和空的密码
+
+right_both
+    #正确的账户和密码
+    ${phone}    ${password}    link=创建新平台    创建新平台
+    [Teardown]    关闭浏览器
+
+wrong_passwd
+    ${phone}    111111    id=J_alertBox    用户名密码格式不匹配
+    #正确的账户和错误的密码
+
+wrong_both
+    1111111    111111    Xpath=//*[@id="app"]/div[1]/div/div/div/div[3]/div[1]/p    您输入的电话号码不正确
+    #不正确的账户和错误的密码
+
+inexist_phone
+    13958745624    111111    id=J_alertBox    用户不存在
+    #不存在的账户和错误的密码

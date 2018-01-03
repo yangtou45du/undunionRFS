@@ -1,0 +1,5 @@
+*** Settings ***
+Suite Teardown
+Library           Selenium2Library
+
+*** Keywords ***
